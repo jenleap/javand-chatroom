@@ -36,8 +36,9 @@
                         <input class="mdui-textfield-input" id="msg"/>
                     </div>
                     <div class="mdui-container" style="padding:20px 35px">
-                        <button class="mdui-btn mdui-color-theme-accent mdui-ripple"
-                                onclick="sendMsgToServer()">Send (enter)
+                        <!-- TODO: add a send button to send message -->
+                        <button class="mdui-btn mdui-color-theme mdui-ripple"
+                                onclick="sendMsgToServer()">Send
                         </button>
                         <button class="mdui-btn mdui-color-theme mdui-ripple"
                                 onclick="clearMsg()">Clear
@@ -57,11 +58,11 @@
                     <span class="mdui-chip-icon mdui-color-blue">
                         <i class="mdui-icon material-icons">face</i></span>
                     <span class="mdui-chip-title">Online Users</span>
-                    <span class="mdui-chip-title chat-num">0</span>
+                    <!-- TODO: check online number num -->
+                    <span id="chat-num"></span>
                 </div>
-                <div class="message-container">
-
-                </div>
+                <!-- TODO: add a message container -->
+                <div id="message-container"></div>
             </div>
 
         </div>
@@ -80,7 +81,8 @@
         /**
          * WebSocket client PS：URL shows WebSocket protocal, port number, and then end point.
          */
-        var webSocket = new WebSocket(/*[[${webSocketUrl}]]*/ 'ws://localhost:8080/chat');
+        //var webSocket = new WebSocket(/*[[${webSocketUrl}]]*/ 'ws://localhost:8080/chat');
+        var webSocket = new WebSocket('ws://localhost:8080/chat');
         /**
          * websocket open connection.
          */
@@ -92,18 +94,23 @@
          * Server send 1) broadcast message, 2) online users.
          */
         webSocket.onmessage = function (event) {
+            var message;
             console.log('WebSocket Receives：%c' + event.data, 'color:green');
             //Receive Message from Server
-            var message = JSON.parse(event.data) || {};
-            var $messageContainer = $('.message-container');
-            if (message.type === 'SPEAK') {
+            if (event.data == "Connected 0") {
+                message = {};
+            } else {
+                message = JSON.parse(event.data);
+            }
+            var $messageContainer = $('#message-container');
+            if (message.type === 'SPEAK' && message.msg.length > 0) {
                 $messageContainer.append(
                     '<div class="mdui-card" style="margin: 10px 0;">' +
                     '<div class="mdui-card-primary">' +
                     '<div class="mdui-card-content message-content">' + message.username + "：" + message.msg + '</div>' +
                     '</div></div>');
             }
-            $('.chat-num').text(message.onlineCount);
+            $('#chat-num').text(message.onlineCount);
             var $cards = $messageContainer.children('.mdui-card:visible').toArray();
             if ($cards.length > 5) {
                 $cards.forEach(function (item, index) {
@@ -137,6 +144,7 @@
     function sendMsgToServer() {
         var $message = $('#msg');
         if ($message.val()) {
+            console.log({username: $('#username').text(), msg: $message.val()});
             webSocket.send(JSON.stringify({username: $('#username').text(), msg: $message.val()}));
             $message.val(null);
         }
@@ -146,7 +154,7 @@
      * Clear screen
      */
     function clearMsg() {
-        $(".message-container").empty();
+        $("#message-container").empty();
     }
 
     /**
@@ -156,6 +164,7 @@
         var e = event || window.event || arguments.callee.caller.arguments[0];
         e.keyCode === 13 && sendMsgToServer();
     };
+
 </script>
 
 </body>

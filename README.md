@@ -1,11 +1,9 @@
 # Chat Room
-Complete the chat room application implementation using WebSocket.
+This is a simple chat room application implemented using WebSocket. User can log in, post messages and view messages sent by others. 
 
-## Background
-WebSocket is a communication protocol that makes it possible to establish a two-way communication channel between a
-server and a client.
+It is the assessment project for Udacity's Java Developer Nanodegree course Java Basics.
 
-## Instruction
+## Assignment:
 ### Implement the message model
 Message model is the message payload that will be exchanged between the client and the server. Implement the Message
 class in chat module. Make sure you cover all there basic actions.
@@ -16,6 +14,13 @@ class in chat module. Make sure you cover all there basic actions.
 ### Complete WebSocketChatServer
 Implement all TODOs inside WebSocketChatServer follow each method description.
 
-### Run the application with command
-mvn build; mvn spring-boot:run
+## To run the application 
+
+Clone the Github repository. Import the project in your IDE of choice. Run the following commands in the terminal:
+
+```
+mvn build
+mvn spring-boot:run
+```
+You can now view the application at http://localhost:8080
 
